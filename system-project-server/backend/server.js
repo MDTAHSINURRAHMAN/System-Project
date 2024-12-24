@@ -12,8 +12,12 @@ const PORT = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
+// Routes
 const petRoutes = require("./routes/petRoutes");
+const userRoutes = require("./routes/userRoutes"); // Added user routes
+
 app.use("/api/pets", petRoutes);
+app.use("/api/users", userRoutes); // User Routes
 
 // Default Route
 app.get("/", (req, res) => {
@@ -23,9 +27,8 @@ app.get("/", (req, res) => {
 // MongoDB Connection
 mongoose
   .connect(process.env.MONGO_URI)
-  .then(() => console.log('MongoDB connected...'))
-  .catch((err) => console.error('MongoDB connection error:', err));
-
+  .then(() => console.log("MongoDB connected..."))
+  .catch((err) => console.error("MongoDB connection error:", err));
 
 // Server Start
 app.listen(PORT, () => {

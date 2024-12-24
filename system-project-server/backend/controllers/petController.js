@@ -2,24 +2,23 @@ const Pet = require("../models/Pet");
 
 // Get All Pets
 const getPets = async (req, res) => {
-    try {
-      const page = parseInt(req.query.page) || 1; // Default to page 1
-      const limit = parseInt(req.query.limit) || 5; // Default limit = 5 pets per page
-      const skip = (page - 1) * limit; // Calculate how many to skip
-  
-      const pets = await Pet.find().skip(skip).limit(limit);
-      const totalPets = await Pet.countDocuments(); // Total count
-  
-      res.status(200).json({
-        totalPages: Math.ceil(totalPets / limit), // Total pages
-        currentPage: page,
-        data: pets,
-      });
-    } catch (error) {
-      res.status(500).json({ message: error.message });
-    }
-  };
-  
+  try {
+    const page = parseInt(req.query.page) || 1; // Default to page 1
+    const limit = parseInt(req.query.limit) || 5; // Default limit = 5 pets per page
+    const skip = (page - 1) * limit; // Calculate how many to skip
+
+    const pets = await Pet.find().skip(skip).limit(limit);
+    const totalPets = await Pet.countDocuments(); // Total count
+
+    res.status(200).json({
+      totalPages: Math.ceil(totalPets / limit), // Total pages
+      currentPage: page,
+      data: pets,
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
 
 // Add New Pet
 const addPet = async (req, res) => {
