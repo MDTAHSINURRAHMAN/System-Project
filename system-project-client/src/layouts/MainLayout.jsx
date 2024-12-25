@@ -29,7 +29,7 @@ const MainLayout = () => {
     <div>
       {/* Navbar */}
       <nav>
-        <Link to="/">Home</Link> | <Link to="/pets">Pets</Link>
+        <Link to="/">Home</Link> | <Link to="/pets">Adopt</Link> | <Link to="/add-pet">Add Pet</Link>
         {!user ? (
           <>
             {' | '}

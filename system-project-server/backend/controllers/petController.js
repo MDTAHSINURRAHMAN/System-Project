@@ -1,6 +1,6 @@
 const Pet = require("../models/Pet");
 
-// Get All Pets
+// Get All Pets with Pagination
 const getPets = async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1; // Default to page 1
@@ -53,4 +53,23 @@ const deletePet = async (req, res) => {
   }
 };
 
-module.exports = { getPets, addPet, updatePet, deletePet };
+// Get Pet by ID
+const getPetById = async (req, res) => {
+  try {
+    const pet = await Pet.findById(req.params.id);
+    if (!pet) {
+      return res.status(404).json({ message: "Pet not found" });
+    }
+    res.status(200).json(pet);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+module.exports = {
+  getPets,
+  getPetById, // <-- Export here
+  addPet,
+  updatePet,
+  deletePet,
+};

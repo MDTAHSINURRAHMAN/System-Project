@@ -10,6 +10,10 @@ const petSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  price: {
+    type: Number, // Added price field
+    required: true,
+  },
   breed: {
     type: String,
     required: true,
@@ -23,6 +27,26 @@ const petSchema = new mongoose.Schema({
   },
   image: {
     type: String, // URL to image
+  },
+  vaccinated: {
+    type: Boolean,
+    default: false,
+  },
+  pottyTrained: {
+    type: Boolean,
+    default: false,
+  },
+  diet: {
+    type: String,
+  },
+  gender: {
+    type: String,
+    enum: ["Male", "Female"],
+    required: true,
+  },
+  spayedOrNeutered: {
+    type: Boolean,
+    default: false,
   },
   adopted: {
     type: Boolean,
