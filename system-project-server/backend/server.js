@@ -1,7 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
-const SSLCommerzPayment = require('sslcommerz-lts')
 const cors = require("cors");
 
 // App Config
@@ -12,10 +11,6 @@ const PORT = process.env.PORT || 5000;
 // Middleware
 app.use(cors());
 app.use(express.json());
-
-const store_id = process.env.STORE_ID;
-const store_passwd = process.env.STORE_PASSWORD;
-const is_live = false //true for live, false for sandbox
 
 // Routes
 const petRoutes = require("./routes/petRoutes");

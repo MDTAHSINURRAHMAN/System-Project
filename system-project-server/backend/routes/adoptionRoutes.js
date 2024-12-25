@@ -1,9 +1,14 @@
 const express = require("express");
 const router = express.Router();
-const { addAdoptionRequest, getAdoptionRequests } = require("../controllers/adoptionController");
+const {
+  createAdoptionRequest,
+  paymentSuccess,
+  paymentFail,
+} = require("../controllers/adoptionController");
 
 // Adoption Routes
-router.post("/", addAdoptionRequest); // Submit adoption request
-router.get("/", getAdoptionRequests); // Fetch all adoption requests
+router.post("/create-adoption", createAdoptionRequest); // Payment Initialization
+router.get("/payment-success", paymentSuccess); // Payment Success
+router.get("/payment-fail", paymentFail); // Payment Failure
 
 module.exports = router;

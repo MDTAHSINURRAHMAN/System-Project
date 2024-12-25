@@ -8,6 +8,8 @@ import MainLayout from "../layouts/MainLayout"; // Import MainLayout
 import PetList from "../pages/PetList"; // New PetList Route
 import AddPet from "../pages/AddPet";   // New AddPet Route
 import AdoptionProcess from "../pages/AdoptionProcess";
+import Success from "../pages/Success";
+import Failure from "../pages/Failure";
 
 const AppRoutes = () => {
   return (
@@ -18,6 +20,8 @@ const AppRoutes = () => {
         <Route path="/pets" element={<PetList />} />
         <Route path="/add-pet" element={<AddPet />} />
         <Route path="/adopt/:id" element={<AdoptionProcess />} />
+        <Route path="/success" element={<Success />} /> {/* Success Route */}
+        <Route path="/failure" element={<Failure />} /> {/* Failure Route */}
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
       </Route>

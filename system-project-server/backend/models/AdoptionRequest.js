@@ -27,6 +27,14 @@ const adoptionRequestSchema = new mongoose.Schema({
     enum: ["Pending", "Approved", "Rejected"],
     default: "Pending",
   },
+  paymentStatus: {
+    type: String,
+    enum: ["Pending", "Paid", "Failed"],
+    default: "Pending",
+  },
+  transactionId: {
+    type: String,
+  },
 });
 
 const AdoptionRequest = mongoose.model(
