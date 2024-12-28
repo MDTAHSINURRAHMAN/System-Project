@@ -32,28 +32,37 @@ const registerVolunteer = async (req, res) => {
 
 // Volunteer Login
 const loginVolunteer = async (req, res) => {
-  const { email, password } = req.body;
-
-  try {
-    const volunteer = await Volunteer.findOne({ email });
-    if (!volunteer) {
-      return res.status(400).json({ message: "Volunteer not found!" });
+    const { email, password } = req.body;
+  
+    try {
+      const volunteer = await Volunteer.findOne({ email });
+      if (!volunteer) {
+        return res.status(400).json({ message: "Volunteer not found!" });
+      }
+  
+      // Check if accepted by admin
+      if (!volunteer.acceptedByAdmin) {
+        return res
+          .status(403)
+          .json({ message: "Registration successful! Waiting for admin approval." });
+      }
+  
+      // Validate password
+      if (volunteer.password !== password) {
+        return res.status(400).json({ message: "Invalid credentials!" });
+      }
+  
+      // Send volunteer data
+      res.status(200).json({
+        message: "Login successful!",
+        volunteer, // <-- FIXED: Include volunteer data
+      });
+    } catch (error) {
+      console.error("Volunteer Login Error:", error);
+      res.status(500).json({ message: "Server error!" });
     }
-
-    if (!volunteer.acceptedByAdmin) {
-      return res.status(403).json({ message: "Waiting for admin approval." });
-    }
-
-    if (volunteer.password !== password) {
-      return res.status(400).json({ message: "Invalid credentials!" });
-    }
-
-    res.status(200).json({ message: "Login successful!" });
-  } catch (error) {
-    console.error("Error logging in volunteer:", error);
-    res.status(500).json({ message: "Server error!" });
-  }
-};
+  };
+  
 
 // Fetch Pending Volunteers
 const getVolunteerRequests = async (req, res) => {
@@ -103,6 +112,22 @@ const rejectVolunteer = async (req, res) => {
   }
 };
 
+const getVolunteerProfile = async (req, res) => {
+  try {
+    const volunteerId = req.params.id; // Get volunteer ID from params
+    const volunteer = await Volunteer.findById(volunteerId);
+
+    if (!volunteer) {
+      return res.status(404).json({ message: "Volunteer not found!" });
+    }
+
+    res.status(200).json(volunteer);
+  } catch (error) {
+    console.error("Error fetching volunteer profile:", error);
+    res.status(500).json({ message: "Server error!" });
+  }
+};
+
 module.exports = {
   registerVolunteer,
   loginVolunteer,
@@ -110,4 +135,5 @@ module.exports = {
   getAcceptedVolunteers,
   approveVolunteer,
   rejectVolunteer,
+  getVolunteerProfile,
 };

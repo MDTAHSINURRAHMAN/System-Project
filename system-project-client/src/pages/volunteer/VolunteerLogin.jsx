@@ -1,38 +1,42 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useAuth } from "../../contexts/authContext"; // Use Context API
 
 const VolunteerLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const { loginVolunteer } = useAuth(); // Use Context API for state management
   const navigate = useNavigate();
 
   const handleVolunteerLogin = async (e) => {
     e.preventDefault();
     try {
-      // Volunteer login API call
-      const response = await axios.post("http://localhost:5000/api/volunteers/login", {
-        email,
-        password,
-      });
-
-      // Check if volunteer is accepted by admin
-      if (!response.data.acceptedByAdmin) {
-        alert("Registration successful! Waiting for admin approval.");
-        return;
-      }
-
-      // Save the token (or session data)
-      localStorage.setItem("volunteerToken", response.data.token);
+      const response = await axios.post(
+        "http://localhost:5000/api/volunteers/login",
+        { email, password }
+      );
+  
+      console.log("Login Response:", response.data); // Debugging log
+  
+      // Check if accepted by admin
+      const volunteerData = response.data.volunteer; // Extract volunteer
+    //   if (!volunteerData.acceptedByAdmin) {
+    //     alert("Registration successful! Waiting for admin approval.");
+    //     return;
+    //   }
+  
+      // Save volunteer data to context
+      loginVolunteer(volunteerData); // Use context to set volunteer data
       alert("Volunteer logged in successfully!");
-      navigate("/volunteer-dashboard"); // Redirect to volunteer dashboard
+      navigate("/volunteer"); // Redirect to dashboard
     } catch (error) {
       console.error("Volunteer Login Error:", error);
       setError(error.response?.data?.message || "Login failed.");
     }
   };
-
+  
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-50">
       <div className="bg-white shadow-lg rounded-lg p-8 max-w-md w-full">

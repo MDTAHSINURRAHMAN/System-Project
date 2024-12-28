@@ -9,7 +9,7 @@ const AdminLogin = () => {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  const { login } = useAuth();
+  const { loginAdmin } = useAuth();
 
   const handleAdminLogin = async (e) => {
     e.preventDefault();
@@ -20,7 +20,7 @@ const AdminLogin = () => {
       });
   
       const adminData = response.data; // Get admin data from response
-      login(adminData); // Set admin state using login() from AuthContext
+      loginAdmin(adminData); // Set admin state using login() from AuthContext
       alert("Admin logged in successfully!");
       navigate("/admin"); // Redirect to admin dashboard
     } catch (error) {

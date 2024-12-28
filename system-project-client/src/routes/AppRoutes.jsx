@@ -17,6 +17,10 @@ import DashboardLayout from "../pages/admin/DashboardLayout";
 import Volunteers from "../pages/admin/Volunteers";
 import Pets from "../pages/admin/Pets";
 import Requests from "../pages/admin/Requests";
+import VolunteerPrivateRoute from "./VolunteerPrivateRoute";
+import VolunteerDashboardLayout from "../pages/volunteer/VolunteerDashboardLayout";
+import VolunteerProfile from "../pages/volunteer/VolunteerProfile";
+import VolunteerTasks from "../pages/volunteer/VolunteerTasks";
 
 const AppRoutes = () => {
   return (
@@ -37,6 +41,19 @@ const AppRoutes = () => {
 
       {/* Admin Login */}
       <Route path="/admin-login" element={<AdminLogin />} />
+
+      {/* Protected Volunteer Dashboard */}
+      <Route
+        path="/volunteer"
+        element={
+          <VolunteerPrivateRoute>
+            <VolunteerDashboardLayout />
+          </VolunteerPrivateRoute>
+        }
+      >
+        <Route path="profile" element={<VolunteerProfile />} />
+        <Route path="tasks" element={<VolunteerTasks />} />
+      </Route>
 
       {/* Admin Dashboard Routes - Protected by PrivateRoute */}
       <Route

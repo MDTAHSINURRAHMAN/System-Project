@@ -7,6 +7,7 @@ const {
   approveVolunteer,
   rejectVolunteer,
   getAcceptedVolunteers,
+  getVolunteerProfile
 } = require("../controllers/volunteerController");
 
 // Volunteer Routes
@@ -20,6 +21,7 @@ router.put("/approve/:id", approveVolunteer);
 
 // Reject Volunteer
 router.delete("/reject/:id", rejectVolunteer);
+router.get("/profile/:id", getVolunteerProfile);
 
 
 module.exports = router;
