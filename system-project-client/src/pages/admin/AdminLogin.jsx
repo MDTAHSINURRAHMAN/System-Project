@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../contexts/authContext";
 import axios from "axios";
 
 const AdminLogin = () => {
@@ -8,16 +9,20 @@ const AdminLogin = () => {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
+  const { login } = useAuth();
+
   const handleAdminLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("/api/admin/login", {
+      const response = await axios.post("http://localhost:5000/api/admin/login", {
         email,
         password,
       });
-
+  
+      const adminData = response.data; // Get admin data from response
+      login(adminData); // Set admin state using login() from AuthContext
       alert("Admin logged in successfully!");
-      navigate("/admin-dashboard"); // Redirect to admin dashboard
+      navigate("/admin"); // Redirect to admin dashboard
     } catch (error) {
       console.error("Admin Login Error:", error);
       setError(error.response?.data?.message || "Login failed.");
