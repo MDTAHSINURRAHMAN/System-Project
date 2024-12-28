@@ -16,10 +16,14 @@ app.use(express.json());
 const petRoutes = require("./routes/petRoutes");
 const userRoutes = require("./routes/userRoutes"); 
 const adoptionRoutes = require("./routes/adoptionRoutes");// Added user routes
+const volunteerRoutes = require("./routes/volunteerRoutes");
+const adminRoutes = require("./routes/adminRoutes");
 
 app.use("/api/pets", petRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/adoptions", adoptionRoutes);
+app.use("/api/volunteers", volunteerRoutes);
+app.use("/api/admin", adminRoutes);
 
 // Default Route
 app.get("/", (req, res) => {
