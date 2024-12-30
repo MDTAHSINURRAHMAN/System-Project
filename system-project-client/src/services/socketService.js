@@ -1,6 +1,6 @@
 import { io } from "socket.io-client";
 
-const socket = io(process.env.REACT_APP_SERVER_URL);
+const socket = io("http://localhost:5000");
 
 export const joinRoom = (roomId) => {
   socket.emit("joinRoom", { roomId });

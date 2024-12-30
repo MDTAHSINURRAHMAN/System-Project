@@ -3,7 +3,8 @@ const router = express.Router();
 const {
   addMessage,
   getMessagesForUser,
-  getPendingChats,
+  getPendingMessages,
+  getUserMessages,
   acceptChat,
   getMessagesByRoom,
 } = require("../controllers/messageController");
@@ -15,10 +16,12 @@ router.post("/", addMessage);
 router.get("/user/:userId", getMessagesForUser);
 
 // Get pending chat requests
-router.get("/pending", getPendingChats);
+router.get("/pending", getPendingMessages);
+
+router.get("/messages/:userId", getUserMessages);
 
 // Accept chat request
-router.put("/accept/:id", acceptChat);
+router.put("/accept/:userId", acceptChat);
 
 // Get Messages by Room ID
 router.get("/:roomId", getMessagesByRoom);

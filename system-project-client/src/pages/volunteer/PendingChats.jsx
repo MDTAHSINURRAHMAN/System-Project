@@ -1,78 +1,100 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import socket from "../../services/socketService"; // Adjust path as per your structure
 
 const PendingChats = () => {
-  const [chats, setChats] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-  const navigate = useNavigate();
+  const [pendingChats, setPendingChats] = useState([]); // Pending chats state
+  const [loading, setLoading] = useState(true); // Loading state
+  const [error, setError] = useState(""); // Error state
+  const navigate = useNavigate(); // Navigation hook
 
-  // Fetch Pending Chats
+  // Fetch pending chats grouped by user
   useEffect(() => {
-    const fetchChats = async () => {
+    const fetchPendingChats = async () => {
       try {
+        // API call to fetch pending chats
         const response = await axios.get(
           "http://localhost:5000/api/chats/pending"
         );
-        setChats(response.data);
+
+        console.log("API Response:", response.data); // Debugging
+        const filteredChats = response.data.filter(
+          (chat) => !chat.receiverId // Filter chats with null receiverId
+        );
+        console.log("Filtered Chats:", filteredChats); // Debugging
+        setPendingChats(filteredChats); // Set filtered chats
       } catch (err) {
         console.error("Error fetching chats:", err);
-        setError("Failed to fetch chats!");
+        setError("Failed to load pending chats.");
       } finally {
-        setLoading(false);
+        setLoading(false); // Stop loading
       }
     };
-    fetchChats();
-  }, []);
 
-  // Handle Accept Chat
-  const handleAccept = async (chatId) => {
+    fetchPendingChats();
+
+  }, []); // Only runs once when component mounts
+
+  // Accept Chat
+  const handleAcceptChat = async (userId) => {
     try {
-      const volunteerId = "volunteerObjectId"; // Replace with actual volunteer ID
-      await axios.put("http://localhost:5000/api/chats/accept", {
-        chatId,
-        volunteerId,
+      // Send Volunteer ID (Assuming Authenticated Volunteer ID)
+      await axios.put(`http://localhost:5000/api/chats/accept/${userId}`, {
+        volunteerId: volunteerId, // Authenticated volunteer ID
       });
-      alert("Chat Accepted!");
-      navigate(`/volunteer/chat/${chatId}`); // Redirect to chat page
+  
+      // Emit event to update other volunteers' lists
+      socket.emit("chatAccepted", userId);
+  
+      // Navigate to Chat Room
+      navigate(`/volunteer/chat/${userId}`);
     } catch (err) {
       console.error("Error accepting chat:", err);
       alert("Failed to accept chat!");
     }
   };
+  
+
+  // Render loading state
+  if (loading) return <p>Loading pending chats...</p>;
+  // Render error state
+  if (error) return <p className="text-red-500">{error}</p>;
 
   return (
     <div className="p-6">
-      <h2 className="text-2xl font-bold mb-4">Pending Chat Requests</h2>
+      <h2 className="text-2xl font-bold mb-4">Pending Chats</h2>
 
-      {loading && <p>Loading chats...</p>}
-      {error && <p className="text-red-500">{error}</p>}
-
-      {!loading && !error && chats.length > 0 && (
+      {/* Display pending chats */}
+      {pendingChats.length > 0 ? (
         <ul className="space-y-4">
-          {chats.map((chat) => (
+          {pendingChats.map((chat) => (
             <li
               key={chat._id}
-              className="flex items-center justify-between p-4 border rounded-lg shadow-sm"
+              onClick={() => navigate(`/volunteer/chats/${chat._id}`)}
+              className="cursor-pointer border p-4 rounded-lg bg-gray-50 shadow-md flex justify-between items-center hover:bg-gray-100"
             >
               <div>
-                <p className="text-lg font-bold">{chat.userId.name}</p>
-                <p className="text-sm text-gray-500">{chat.messages[0].content}</p>
+                <p className="font-bold text-lg">User ID: {chat._id}</p>
+                <p className="text-gray-600">{chat.message}</p>
+                <p className="text-xs text-gray-400">
+                  Last Message:{" "}
+                  {new Date(chat.createdAt).toLocaleString()}
+                </p>
               </div>
+
+              {/* Accept Chat Button */}
               <button
-                onClick={() => handleAccept(chat._id)}
-                className="bg-green-500 text-white px-4 py-2 rounded"
+                onClick={() => handleAcceptChat(chat.senderId)}
+                className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
               >
                 Accept
               </button>
             </li>
           ))}
         </ul>
-      )}
-
-      {!loading && !error && chats.length === 0 && (
-        <p>No pending chat requests.</p>
+      ) : (
+        <p className="text-gray-500">No pending chats.</p>
       )}
     </div>
   );

@@ -64,6 +64,10 @@ io.on("connection", (socket) => {
     io.to(roomId).emit("receiveMessage", { sender, message, timestamp });
   });
 
+  socket.on("acceptChat", (userId) => {
+    io.emit("chatAccepted", userId); // Broadcast to all volunteers
+  });
+
   socket.on("disconnect", () => {
     console.log("User Disconnected:", socket.id);
   });

@@ -25,6 +25,7 @@ import ChatRoom from "../components/Chat/ChatRoom";
 import Chat from "../pages/chat/Chat";
 import PendingChats from "../pages/volunteer/PendingChats";
 import UserChat from "../pages/UserChat";
+import PendingChatDetails from "../pages/volunteer/PendingChatDetails";
 
 const AppRoutes = () => {
   return (
@@ -63,6 +64,7 @@ const AppRoutes = () => {
         <Route path="profile" element={<VolunteerProfile />} />
         <Route path="tasks" element={<VolunteerTasks />} />
         <Route path="chats" element={<PendingChats />} />
+        <Route path="chats/:userId" element={<PendingChatDetails />} />
         <Route path="chat/:roomId" element={<ChatRoom />} />
       </Route>
 
