@@ -31,7 +31,7 @@ const Home = () => {
           }}
           className="dancing text-4xl md:text-7xl font-extrabold text-white mb-4 tracking-wider text-center"
         >
-          Welcome to <span className="text-[#F15E42]">Pawfect Haven!</span>
+          Welcome to <span className="text-[#C52546]">Pawfect Haven!</span>
         </motion.h1>
 
         <motion.p

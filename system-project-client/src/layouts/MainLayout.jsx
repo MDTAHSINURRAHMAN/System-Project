@@ -4,16 +4,18 @@ import { auth } from "../firebase.config";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
-import logo from "../assets/Logo/logo.png";
+import logo from "../assets/Logo/logo-2.png";
 
 const MainLayout = () => {
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true); // Loading state added
   const navigate = useNavigate();
 
   // Check authentication state
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
+      setLoading(false); // Set loading to false when user is fetched
     });
     return () => unsubscribe();
   }, []);
@@ -34,6 +36,15 @@ const MainLayout = () => {
     hidden: { opacity: 0, y: -50 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
   };
+
+  // Show Loading Spinner
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-[#C52546]"></div>
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -72,8 +83,8 @@ const MainLayout = () => {
                   to="/"
                   className={({ isActive }) =>
                     isActive
-                      ? "bg-[#F15E42] font-bold text-sm tracking-[0.1rem] border-none py-2 px-7 text-white"
-                      : "text-[#F15E42] font-bold text-sm tracking-[0.1rem] border border-[#F15E42] py-2 px-7"
+                      ? "bg-[#C52546] font-bold text-sm tracking-[0.1rem] border-none py-2 px-7 text-white"
+                      : "text-[#373737] font-bold text-sm tracking-[0.1rem]"
                   }
                 >
                   Home
@@ -84,8 +95,8 @@ const MainLayout = () => {
                   to="/pets"
                   className={({ isActive }) =>
                     isActive
-                      ? "bg-[#F15E42] font-bold text-sm tracking-[0.1rem] border-none py-2 px-7 text-white"
-                      : "text-[#F15E42] font-bold text-sm tracking-[0.1rem] border border-[#F15E42] py-2 px-7"
+                      ? "bg-[#C52546] font-bold text-sm tracking-[0.1rem] border-none py-2 px-7 text-white"
+                      : "text-[#373737] font-bold text-sm tracking-[0.1rem]"
                   }
                 >
                   Adopt
@@ -96,8 +107,8 @@ const MainLayout = () => {
                   to="/add-pet"
                   className={({ isActive }) =>
                     isActive
-                      ? "bg-[#F15E42] font-bold text-sm tracking-[0.1rem] border-none py-2 px-7 text-white"
-                      : "text-[#F15E42] font-bold text-sm tracking-[0.1rem] border border-[#F15E42] py-2 px-7"
+                      ? "bg-[#C52546] font-bold text-sm tracking-[0.1rem] border-none py-2 px-7 text-white"
+                      : "text-[#373737] font-bold text-sm tracking-[0.1rem]"
                   }
                 >
                   Add Pet
@@ -108,11 +119,23 @@ const MainLayout = () => {
                   to="/volunteer-register"
                   className={({ isActive }) =>
                     isActive
-                      ? "bg-[#F15E42] font-bold text-xs tracking-[0.1rem] border-none py-2 px-3 text-white"
-                      : "text-[#F15E42] font-bold text-xs tracking-[0.1rem] border border-[#F15E42] py-2 px-3"
+                      ? "bg-[#C52546] font-bold text-xs tracking-[0.1rem] border-none py-2 px-5 text-white"
+                      : "text-[#373737] font-bold text-xs tracking-[0.1rem]"
                   }
                 >
                   Be Our Volunteer
+                </NavLink>
+              </li>
+              <li>
+                <NavLink
+                  to={user ? `/user/chat/${user.uid}` : "/login"} // Use dynamic user ID
+                  className={({ isActive }) =>
+                    isActive
+                      ? "bg-[#C52546] font-bold text-xs tracking-[0.1rem] border-none py-2 px-5 text-white"
+                      : "text-[#373737] font-bold text-xs tracking-[0.1rem]"
+                  }
+                >
+                  Chat
                 </NavLink>
               </li>
             </ul>
@@ -120,11 +143,8 @@ const MainLayout = () => {
           <div className="flex justify-center items-center">
             <img className="w-24 md:w-16" src={logo} alt="Logo" />
             <div className="hidden md:block">
-              <p className="chewy text-2xl mb-0 tracking-[0.2rem] web-name">
+              <p className="chewy text-2xl mb-0 tracking-[0.2rem] text-[#C52546]">
                 <span>Pawfect</span>
-              </p>
-              <p className="text-xs tracking-[0.15rem] font-semibold text-[#373737]">
-                rescue haven
               </p>
             </div>
           </div>
@@ -136,8 +156,8 @@ const MainLayout = () => {
                 to="/"
                 className={({ isActive }) =>
                   isActive
-                    ? "bg-[#F15E42] font-bold text-xs tracking-[0.1rem] border-none py-2 px-3 text-white"
-                    : "text-[#F15E42] font-bold text-xs tracking-[0.1rem] border border-[#F15E42] py-2 px-3"
+                    ? "bg-[#C52546] font-bold text-xs tracking-[0.1rem] border-none py-2 px-5 text-white"
+                    : "text-[#373737] font-bold text-xs tracking-[0.1rem]"
                 }
               >
                 Home
@@ -148,8 +168,8 @@ const MainLayout = () => {
                 to="/pets"
                 className={({ isActive }) =>
                   isActive
-                    ? "bg-[#F15E42] font-bold text-xs tracking-[0.1rem] border-none py-2 px-3 text-white"
-                    : "text-[#F15E42] font-bold text-xs tracking-[0.1rem] border border-[#F15E42] py-2 px-3"
+                    ? "bg-[#C52546] font-bold text-xs tracking-[0.1rem] border-none py-2 px-5 text-white"
+                    : "text-[#373737] font-bold text-xs tracking-[0.1rem]"
                 }
               >
                 Adopt
@@ -160,8 +180,8 @@ const MainLayout = () => {
                 to="/add-pet"
                 className={({ isActive }) =>
                   isActive
-                    ? "bg-[#F15E42] font-bold text-xs tracking-[0.1rem] border-none py-2 px-3 text-white"
-                    : "text-[#F15E42] font-bold text-xs tracking-[0.1rem] border border-[#F15E42] py-2 px-3"
+                    ? "bg-[#C52546] font-bold text-xs tracking-[0.1rem] border-none py-2 px-5 text-white"
+                    : "text-[#373737] font-bold text-xs tracking-[0.1rem]"
                 }
               >
                 Add Pet
@@ -172,11 +192,23 @@ const MainLayout = () => {
                 to="/volunteer-register"
                 className={({ isActive }) =>
                   isActive
-                    ? "bg-[#F15E42] font-bold text-xs tracking-[0.1rem] border-none py-2 px-3 text-white"
-                    : "text-[#F15E42] font-bold text-xs tracking-[0.1rem] border border-[#F15E42] py-2 px-3"
+                    ? "bg-[#C52546] font-bold text-xs tracking-[0.1rem] border-none py-2 px-5 text-white"
+                    : "text-[#373737] font-bold text-xs tracking-[0.1rem]"
                 }
               >
                 Be Our Volunteer
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to={user ? `/user/chat/${user.uid}` : "/login"} // Use dynamic user ID
+                className={({ isActive }) =>
+                  isActive
+                    ? "bg-[#C52546] font-bold text-xs tracking-[0.1rem] border-none py-2 px-5 text-white"
+                    : "text-[#373737] font-bold text-xs tracking-[0.1rem]"
+                }
+              >
+                Chat
               </NavLink>
             </li>
           </ul>
@@ -186,13 +218,13 @@ const MainLayout = () => {
             <>
               <Link
                 to="/register"
-                className="py-2 px-6 text-[#F15E42] racking-[0.1rem] font-bold rounded border border-[#F15E42]   mr-2"
+                className="py-2 px-6 racking-[0.1rem] font-bold rounded bg-[#151515] text-white mr-2"
               >
                 Register
               </Link>
               <Link
                 to="/login"
-                className="py-2 px-6 text-[#F15E42] tracking-[0.1rem] font-bold bg-[#141414] rounded"
+                className="py-2 px-6 tracking-[0.1rem] font-bold text-white bg-[#C52546] rounded"
               >
                 Sign In
               </Link>

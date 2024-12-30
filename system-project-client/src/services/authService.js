@@ -52,6 +52,9 @@ export const registerUser = async (email, password, name, photo) => {
     );
     console.log("MongoDB Response:", response.data);
 
+    // Save user session
+    sessionStorage.setItem("user", JSON.stringify(response.data));
+
     return userCredential.user;
   } catch (error) {
     console.error("Registration Error:", error.message);
@@ -66,6 +69,10 @@ export const loginUser = async (email, password) => {
       email,
       password
     );
+
+    // Save user session
+    sessionStorage.setItem("user", JSON.stringify(userCredential.user));
+
     return userCredential.user;
   } catch (error) {
     console.error("Error logging in:", error.code, error.message); // Added detailed logs
@@ -80,12 +87,15 @@ export const loginWithGoogle = async () => {
     const userCredential = await signInWithPopup(auth, provider);
 
     // Save Google user to MongoDB if not already present
-    await axios.post("http://localhost:5000/api/users/register", {
+    const response = await axios.post("http://localhost:5000/api/users/register", {
       name: userCredential.user.displayName,
       email: userCredential.user.email,
       password: "google-auth", // Placeholder password
       photo: userCredential.user.photoURL,
     });
+
+    // Save user session
+    sessionStorage.setItem("user", JSON.stringify(response.data));
 
     return userCredential.user;
   } catch (error) {
@@ -108,6 +118,9 @@ export const resetPassword = async (email) => {
 export const logoutUser = async () => {
   try {
     await signOut(auth);
+
+    // Clear session
+    sessionStorage.removeItem("user");
   } catch (error) {
     console.error("Error logging out:", error);
     throw error;

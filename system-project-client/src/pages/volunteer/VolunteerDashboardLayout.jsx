@@ -19,6 +19,11 @@ const VolunteerDashboardLayout = () => {
             </Link>
           </li>
           <li>
+            <Link to="/volunteer/chat/room1" className="hover:text-gray-300">
+              Chat
+            </Link>
+          </li>
+          <li>
             <Link to="/volunteer/logout" className="hover:text-gray-300">
               Logout
             </Link>

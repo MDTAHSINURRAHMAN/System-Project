@@ -21,6 +21,10 @@ import VolunteerPrivateRoute from "./VolunteerPrivateRoute";
 import VolunteerDashboardLayout from "../pages/volunteer/VolunteerDashboardLayout";
 import VolunteerProfile from "../pages/volunteer/VolunteerProfile";
 import VolunteerTasks from "../pages/volunteer/VolunteerTasks";
+import ChatRoom from "../components/Chat/ChatRoom";
+import Chat from "../pages/chat/Chat";
+import PendingChats from "../pages/volunteer/PendingChats";
+import UserChat from "../pages/UserChat";
 
 const AppRoutes = () => {
   return (
@@ -33,10 +37,15 @@ const AppRoutes = () => {
         <Route path="/adopt/:id" element={<AdoptionProcess />} />
         <Route path="/success" element={<Success />} /> {/* Success Route */}
         <Route path="/failure" element={<Failure />} /> {/* Failure Route */}
+        <Route path="/user/chat/:userId" element={<UserChat />} />
         <Route path="/volunteer-register" element={<VolunteerRegister />} />
         <Route path="/volunteer-login" element={<VolunteerLogin />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
+        <Route
+          path="/chat/:roomId"
+          element={<ChatRoom roomId="room123" sender="user123" />}
+        />
       </Route>
 
       {/* Admin Login */}
@@ -53,6 +62,8 @@ const AppRoutes = () => {
       >
         <Route path="profile" element={<VolunteerProfile />} />
         <Route path="tasks" element={<VolunteerTasks />} />
+        <Route path="chats" element={<PendingChats />} />
+        <Route path="chat/:roomId" element={<ChatRoom />} />
       </Route>
 
       {/* Admin Dashboard Routes - Protected by PrivateRoute */}
