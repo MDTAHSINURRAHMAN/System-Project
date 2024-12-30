@@ -5,7 +5,9 @@ const {
   getMessagesForUser,
   getPendingMessages,
   getUserMessages,
+  getChatMessages,
   acceptChat,
+  getAcceptedChats,
   getMessagesByRoom,
 } = require("../controllers/messageController");
 
@@ -20,8 +22,13 @@ router.get("/pending", getPendingMessages);
 
 router.get("/messages/:userId", getUserMessages);
 
+router.get("/chat/:userId/:volunteerId", getChatMessages);
+
+
 // Accept chat request
 router.put("/accept/:userId", acceptChat);
+
+router.get("/accepted", getAcceptedChats);
 
 // Get Messages by Room ID
 router.get("/:roomId", getMessagesByRoom);

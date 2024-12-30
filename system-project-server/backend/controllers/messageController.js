@@ -81,6 +81,26 @@ const getUserMessages = async (req, res) => {
   }
 };
 
+const getChatMessages = async (req, res) => {
+    const { userId, volunteerId } = req.params; // Extract userId and volunteerId
+  
+    try {
+      const messages = await Message.find({
+        $or: [
+          { senderId: userId, receiverId: volunteerId }, // Messages sent by user to volunteer
+          { senderId: volunteerId, receiverId: userId }, // Messages sent by volunteer to user
+          { senderId: userId, receiverId: null }, // Messages sent by user before acceptance
+        ],
+      }).sort({ createdAt: 1 }); // Sort messages by time (oldest first)
+  
+      res.status(200).json(messages); // Return messages
+    } catch (error) {
+      console.error("Error fetching chat messages:", error);
+      res.status(500).json({ message: "Server error!" });
+    }
+  };
+  
+
 // Accept Chat Request
 // Accept Chat Request
 
@@ -100,7 +120,32 @@ const acceptChat = async (req, res) => {
       console.error("Error accepting chat:", error);
       res.status(500).json({ message: "Failed to accept chat!" });
     }
-  };  
+  };
+  
+  const getAcceptedChats = async (req, res) => {
+    try {
+      const acceptedChats = await Message.aggregate([
+        {
+          $match: { receiverId: { $ne: null } }, // Fetch messages with receiverId not null
+        },
+        {
+          $group: {
+            _id: "$roomId", // Group by room ID
+            messages: { $push: "$message" },
+            latestMessage: { $last: "$message" },
+            latestTimestamp: { $last: "$timestamp" },
+          },
+        },
+      ]);
+  
+      res.status(200).json(acceptedChats);
+    } catch (error) {
+      console.error("Error fetching accepted chats:", error);
+      res.status(500).json({ message: "Server error" });
+    }
+  };
+  
+  
 
 // Get Messages by Room ID
 const getMessagesByRoom = async (req, res) => {
@@ -121,6 +166,8 @@ module.exports = {
   getMessagesForUser,
   getPendingMessages,
   getUserMessages,
+  getChatMessages,
   acceptChat,
+  getAcceptedChats,
   getMessagesByRoom,
 };
